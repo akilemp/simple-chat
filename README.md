@@ -14,6 +14,30 @@ pnpm dev
 bun dev
 ```
 
+Start docker for development database
+
+```
+docker-compose up -d
+```
+
+```
+npx prisma generate
+
+npx prisma db push
+```
+
+When you’re working on your application and making changes to your database schema, you’ll need to run the migrate command again every time you make changes to the schema in order for Prisma to (1) generate a migration file and apply it to the underlying database and (2) regenerate the Prisma client in your project with the latest types and model methods.
+
+```
+npm exec prisma migrate dev
+```
+
+Start docker for postgresql
+
+```
+docker-compose up -d
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
@@ -28,15 +52,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-npx prisma generate
-
-npx prisma dp push
-
-docker-compose up -d

@@ -14,6 +14,8 @@ import { FaGithub } from "react-icons/fa";
 import { SignInFlow } from "../types";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
+import { signIn } from "next-auth/react";
+
 
 
 interface SignUpCardProps {
@@ -24,6 +26,12 @@ const SignInCard = ({ setState }: SignUpCardProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleProviderSignUp = (value: "google" | "github") => {
+    setIsLoading(true);
+    signIn(value, { redirectTo: "/" })
+  }
 
   return (
     <Card className="w-full h-full p-8">
@@ -68,15 +76,15 @@ const SignInCard = ({ setState }: SignUpCardProps) => {
             required
             id="confirmPassword"
           />
-          <Button type="submit" className="w-full" size="lg" disabled={false}>Continue</Button>
+          <Button type="submit" className="w-full" size="lg" disabled={isLoading}>Continue</Button>
         </form>
 
         <Separator />
 
         <div className="flex flex-col gap-y-2.5">
           <Button
-            disabled={false}
-            onClick={() => { }}
+            disabled={isLoading}
+            onClick={() => handleProviderSignUp("google")}
             variant="outline"
             size="lg"
             className="w-full relative"
@@ -84,8 +92,8 @@ const SignInCard = ({ setState }: SignUpCardProps) => {
             <FcGoogle className="size-5" />
             Continue with Google</Button>
           <Button
-            disabled={false}
-            onClick={() => { }}
+            disabled={isLoading}
+            onClick={() => handleProviderSignUp("github")}
             variant="outline"
             size="lg"
             className="w-full relative"

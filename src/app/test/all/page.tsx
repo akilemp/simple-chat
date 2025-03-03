@@ -1,16 +1,21 @@
 // "use client"
 
-import { db } from "@/lib/db";
+import { auth } from "@/auth";
+import { prisma } from "@/prisma";
+import { redirect } from "next/navigation";
+
 
 const Page = async () => {
-    const res = await db.user.findMany(
-        {
+    const session = await auth()
+    if (session === null) {
+        return redirect("/auth");
+    }
 
-        }
-    )
+    const users = await prisma.user.findMany()
+    
     return (
         <div>
-            {res.map((user, ind) => {
+            {users.map((user, ind) => {
                 return (
                     <div key={ind}>
                         <div >Name:{user.name}</div>
