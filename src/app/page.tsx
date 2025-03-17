@@ -1,18 +1,22 @@
 import { auth } from "@/auth";
+import UserButton from "@/features/auth/components/user-button";
+import { SessionProvider } from "next-auth/react";
 
-import { SignOut } from "@/features/auth/components/sing-out";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth()
-  if (session === null) {
+  if (session === null || session.user === undefined) {
     return redirect("/auth");
   }
 
   return (
-    <div>Logged in
-      <SignOut />
-    </div>
+    <SessionProvider>
+      <div>Logged in as {session.user.email}
+        <UserButton />
+      </div>
+    </SessionProvider>
+
   );
 
 }

@@ -12,9 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { FaGithub } from "react-icons/fa";
 import { SignInFlow } from "../types";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
+import { TriangleAlert } from "lucide-react";
 
 
 
@@ -27,6 +28,37 @@ const SignInCard = ({ setState }: SignUpCardProps) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleCredentialsSignUp = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError("Passwords dont match")
+      return
+    }
+
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        signIn("credentials", { email, password })
+      } else {
+        setError("Signup failed. Please try again.")
+      }
+    } catch (err) {
+      console.log("[ERROR]: ", err)
+    }
+
+  }
 
   const handleProviderSignUp = (value: "google" | "github") => {
     setIsLoading(true);
@@ -44,8 +76,15 @@ const SignInCard = ({ setState }: SignUpCardProps) => {
         </CardDescription>
       </CardHeader>
 
+      {!!error && (
+        <div className="bg-destructive/10 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
+
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-2.5">
+        <form onSubmit={handleCredentialsSignUp} className="space-y-2.5">
           <Label htmlFor="email" className="mb-0">Email</Label>
           <Input
             disabled={false}
