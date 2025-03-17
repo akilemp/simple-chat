@@ -1,0 +1,22 @@
+{
+  "name": "socket-server",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Aki Lempola",
+  "type": "commonjs",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "build": "tsc",
+    "serve": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@types/socket.io": "^3.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.1"
+  }
+}

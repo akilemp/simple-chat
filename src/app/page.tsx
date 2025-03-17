@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import UserButton from "@/features/auth/components/user-button";
+import Chat from "@/features/chat/chat";
 import { SessionProvider } from "next-auth/react";
 
 import { redirect } from "next/navigation";
