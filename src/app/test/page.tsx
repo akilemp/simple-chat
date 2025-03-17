@@ -1,12 +1,17 @@
 
+import { auth } from "@/auth";
+import Chat from "@/features/chat/chat";
+import { redirect } from "next/navigation";
 
-import { prisma } from "@/prisma";
-import { Prisma } from "@prisma/client";
 
 const Page = async () => {
+    const session = await auth()
+    if (session === null || session.user === undefined) {
+        return redirect("/auth");
+    }
 
     return (
-        <div>test</div>
+        <Chat />
     )
 }
 

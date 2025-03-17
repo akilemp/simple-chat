@@ -30,9 +30,6 @@ const UserButton = () => {
             <DropdownMenuContent align="center" side="right" className="w-60">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => signOut()}  >
                     <LogOut
                         className="size-4 mr-2"
