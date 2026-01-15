@@ -1,83 +1,58 @@
-"use client"
+// src/features/chat/Chat.tsx
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { useEffect, useState, useRef, FormEvent } from 'react';
-import { io, Socket } from 'socket.io-client';
-import UserButton from '../auth/components/user-button';
+import { useEffect, useState, useRef } from "react";
+import { io, Socket } from "socket.io-client";
+import MessageList, { ChatMessage } from "./components/MessageList";
+import ChatInput from "./components/ChatInput";
 
-export default function Home() {
-    const [messages, setMessages] = useState<string[]>([]);
-    const [input, setInput] = useState<string>('');
+interface ChatProps {
+    username: string;          // <-- new prop
+}
+
+export default function Chat({ username }: ChatProps) {
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
     const socketRef = useRef<Socket | null>(null);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
     const maxMessageLength = 100;
 
+    /* ---------- socket handling ---------- */
     useEffect(() => {
-        socketRef.current = io('http://localhost:8080');
+        // Encode the username to avoid issues with special characters
+        const encodedName = encodeURIComponent(username);
+        const socket = io("http://localhost:8080", {
+            query: { username: encodedName },   // <-- send it as a query param
+        });
 
-        const socket = socketRef.current;
+        socketRef.current = socket;
 
-        if (socket) {
-            socket.on('connect', () => {
-                console.log('Connected to server');
+        socket.on("connect", () => console.log("Connected as", username));
+        socket.on("disconnect", () => console.log("Disconnected"));
+
+        socket.on("message", (msg: ChatMessage) => {
+            setMessages((prev) => {
+                const updated = [...prev, msg];
+                return updated.length > maxMessageLength
+                    ? updated.slice(updated.length - maxMessageLength)
+                    : updated;
             });
+        });
 
-            socket.on('message', (msg: string) => {
-                setMessages((prevMessages) => {
-                    const updatedMessages = [...prevMessages, msg];
-                    return updatedMessages.length > maxMessageLength
-                        ? updatedMessages.slice(updatedMessages.length - maxMessageLength)
-                        : updatedMessages;
-                });
-            });
+        return () => {
+            socket.disconnect();
+        };
+    }, [username]); // re‑run if the username ever changes
 
-            socket.on('disconnect', () => {
-                console.log('Disconnected from server');
-            });
-
-            return () => {
-                if (socket) {
-                    socket.disconnect();
-                }
-            };
-        }
-    }, []);
-
-    useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
-        }
-    }, [messages]);
-
-    const sendMessage = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const sendMessage = (text: string) => {
         if (socketRef.current) {
-            socketRef.current.emit('message', input);
-            setInput('');
+            // Include the username in the payload so the server can broadcast it
+            socketRef.current.emit("message", { text, username });
         }
     };
 
     return (
-        <div className='flex flex-col h-full'>
-            <div className='flex-grow overflow-y-auto p-4'>
-                {messages.map((message, index) => (
-                    <p key={index}>{message}</p>
-                ))}
-                <div ref={messagesEndRef}></div>
-            </div>
-            <div className='flex w-full p-2'>
-                <UserButton />
-                <form onSubmit={sendMessage} className='flex w-full'>
-                    <input
-                        className='border-zinc-400 border rounded-sm m-1 p-1 flex-grow'
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                    />
-                    <Button className='m-1' type='submit' >Send</Button>
-                </form>
-            </div>
-
+        <div className="flex h-full flex-col bg-gray-50">
+            <MessageList messages={messages} />
+            <ChatInput onSend={sendMessage} />
         </div>
     );
 }

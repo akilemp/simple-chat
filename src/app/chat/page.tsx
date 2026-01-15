@@ -11,7 +11,7 @@ const Page = async () => {
     }
 
     return (
-        <Chat />
+        <Chat username="test" />
     )
 }
 

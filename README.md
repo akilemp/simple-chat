@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, run the development front-end server:
 
 ```bash
 npm run dev
@@ -18,6 +18,12 @@ Start docker for development database
 
 ```
 docker-compose up -d
+```
+
+Start the chat server
+```
+cd /socket-server
+npm start 
 ```
 
 ```
