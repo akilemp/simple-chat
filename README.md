@@ -1,6 +1,8 @@
 # 💬 Ephemeral Real-Time Chat
 
 A simple chat application featuring persistent user authentication and real-time ephemeral messaging. Built with Next.js, Socket.io, and PostgreSQL.
+![Login](/screenshots/login.jpg)
+![Chat](/screenshots/chat.jpg)
 
 ## 🏗️ Architecture Overview
 
