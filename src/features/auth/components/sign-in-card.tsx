@@ -24,8 +24,8 @@ interface SignInCardProps {
 }
 
 const SignInCard = ({ setState }: SignInCardProps) => {
-  const [email, setEmail] = useState("Aki@test.io");
-  const [password, setPassword] = useState("Aki@test.io");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

@@ -1,60 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 Ephemeral Real-Time Chat
 
-## Getting Started
+A simple chat application featuring persistent user authentication and real-time ephemeral messaging. Built with Next.js, Socket.io, and PostgreSQL.
 
-First, run the development front-end server:
+## 🏗️ Architecture Overview
 
+This app utilizes a hybrid data strategy designed for privacy and speed:
+
+* **Persistent Layer (PostgreSQL):** All user accounts, auth profiles, and credentials are stored in a PostgreSQL database.
+
+* **Ephemeral Layer (Socket.io):** Real-time message broadcasting and in-memory caching. Messages are not stored in the database, ensuring a zero-footprint messaging experience.
+
+## 🚀 Tech Stack
+
+* **Framework:** Next.js 15 (App Router, TypeScript)
+
+* **Real-Time Engine:** Socket.io (In-memory message caching)
+
+* **Database:** PostgreSQL (Running in Docker)
+
+* **ORM:** Prisma
+
+* **Authentication:** Auth.js (GitHub, Google, & Credentials)
+
+* **UI & Styling:** shadcn/ui & Tailwind CSS
+
+## 🛠️ Installation & Setup
+
+### 1. Environment Variables
+
+Create a .env file in the root directory:
+PostgreSQL (Docker)
+```bash
+POSTGRES_USER=...
+POSTGRES_PASSWORD=...
+POSTGRES_DB=...
+DATABASE_URL="..."
+
+SOCKET_SERVER_URL="http://localhost:8080"
+```
+
+Create a .env.local file in the root directory: 
+Auth.js
+```bash
+AUTH_SECRET="your_secret_key"
+AUTH_GITHUB_ID=your_id
+AUTH_GITHUB_SECRET=your_secret
+AUTH_GOOGLE_ID=your_id
+AUTH_GOOGLE_SECRET=your_secret
+```
+
+### 2. Infrastructure (Docker)
+
+Launch the database container. The configuration includes a volume for user data persistence so accounts remain even after a container reset.
+```bash
+docker-compose up -d
+```
+
+### 3. Database Schema
+
+Push the Prisma schema to your PostgreSQL instance to create the user tables:
+```bash
+npm install
+
+npx prisma migrate dev --name init_user_system
+```
+
+### 4. Running the Project
+
+The project requires both the Next.js app and the Socket backend to be active:
+
+Terminal 1: Next.js Frontend
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Start docker for development database
-
-```
-docker-compose up -d
-```
-
-Start the chat server
-```
-cd /socket-server
-npm start 
+Terminal 2: Socket.io Backend Server
+```bash
+cd ./socket-server
+npm start
 ```
 
-```
-npx prisma generate
+## 🛡️ Key Features
 
-npx prisma db push
-```
+* **Hybrid Auth:** Secure login via Social Providers (Google/GitHub) or traditional Email/Password credentials.
 
-When you’re working on your application and making changes to your database schema, you’ll need to run the migrate command again every time you make changes to the schema in order for Prisma to (1) generate a migration file and apply it to the underlying database and (2) regenerate the Prisma client in your project with the latest types and model methods.
+* **Persistent Users:** User profiles are saved to a PSQL database.
 
-```
-npm exec prisma migrate dev
-```
+* **Live Chat:** Real-time communication with optimized broadcasting.
 
-Start docker for postgresql
-
-```
-docker-compose up -d
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* **Zero-Footprint Messaging:** Chat history exists only in limited server memory—once the server restarts, the cache is cleared.

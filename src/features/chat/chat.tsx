@@ -6,9 +6,12 @@ import { io, Socket } from "socket.io-client";
 import MessageList, { ChatMessage } from "./components/MessageList";
 import ChatInput from "./components/ChatInput";
 
+
 interface ChatProps {
     username: string;          // <-- new prop
 }
+
+const SOCKET_URL = process.env.SOCKET_SERVER_URL || "http://localhost:8080";
 
 export default function Chat({ username }: ChatProps) {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -19,7 +22,7 @@ export default function Chat({ username }: ChatProps) {
     useEffect(() => {
         // Encode the username to avoid issues with special characters
         const encodedName = encodeURIComponent(username);
-        const socket = io("http://localhost:8080", {
+        const socket = io(SOCKET_URL, {
             query: { username: encodedName },   // <-- send it as a query param
         });
 

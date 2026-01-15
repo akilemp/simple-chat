@@ -11,7 +11,7 @@ interface ChatPayload {
 }
 
 /* -------------------------------------------------------------
-   Create the Socket.IO server (CORS set for your Next app)
+   Create the Socket.IO server (CORS set for Next app)
    ------------------------------------------------------------- */
 const io = new Server(8080, {
     cors: {
@@ -46,10 +46,10 @@ io.use((socket: Socket, next) => {
 io.on("connection", (socket: Socket) => {
     console.log("🟢 User connected:", socket.id, "as", socket.data.user);
 
-    // a  Send cached history to the newly‑connected client
+    //   Send cached history to the newly‑connected client
     messageCache.forEach((msg) => socket.emit("message", msg));
 
-    // b  Handle incoming messages
+    //   Handle incoming messages
     socket.on("message", (payload) => {
         // -----------------------------------------------------------------
         // Accept two formats:

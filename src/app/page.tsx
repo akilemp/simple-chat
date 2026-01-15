@@ -19,7 +19,7 @@ export default async function Home() {
   return (
     <SessionProvider>
       {/* Full‑height flex column, no centering */}
-      <main className="flex h-screen flex-col items-center bg-gray-50 p-4">
+      <main className="flex h-screen flex-col items-center bg-[#574f6b] p-4">
         {/* Header */}
         <header className="w-full max-w-4xl rounded-t-lg bg-white shadow-sm p-6 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-gray-800">

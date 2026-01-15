@@ -27,10 +27,17 @@ export default function MessageList({ messages }: Props) {
         return `${user} [${t}]: ${text}`;
     };
 
+    const getRowStyle = (index: number) => {
+        return index % 2 === 0 ? "bg-gray-100" : "bg-white";
+    }
+
     return (
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
             {messages.map((msg, i) => (
-                <p key={i} className="text-sm text-gray-800">
+                <p
+                    key={i}
+                    className={`text-sm text-gray-800 p-1 m-0 ${getRowStyle(i)}`}
+                >
                     {format(msg)}
                 </p>
             ))}
